@@ -1,6 +1,6 @@
 # **WORK IN PROGRESS**
 
-# Colonials
+## :video_game:Colonials
 
 ### Colonials is a terminal game written in rust using termion.
 
