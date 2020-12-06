@@ -52,6 +52,19 @@ fn main(){
     write!(stdout, "{}{}", termion::cursor::Show, termion::clear::All).unwrap();
 }
 
+fn init(){
+    let mut colonies = Vec::new();
+    let mut n = 0;
+    while n < 4 {
+        let mut colony = Colony {
+            selected: 0,
+            owner: 0,
+        };
+        colonies.push(colony);
+        n += 1;
+    };
+}
+
 fn render(display: bool){
     if display {
         let pop = Menu {
