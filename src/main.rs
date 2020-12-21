@@ -86,10 +86,12 @@ fn render(display: bool){
             }
         }
     }else{
+        //Will be taken from the vector later...
         let mut colony = Colony {
             selected: 0,
             owner: 0,
         };
+
         print!(" {one}/##\\ {two}/##\\\n\r{reset}",one = color::Fg(color::Red),two = color::Fg(color::Blue),reset = color::Fg(color::Reset));
         if colony.selected == 0 {
             if colony.owner == 0{
