@@ -11,6 +11,7 @@ fn main(){
     let mut ypos = 0;
     let mut xpos = 0;
     let mut menu:bool = false;
+    let mut colonys = init();
     // Get the standard input stream.
     let stdin = stdin();
     // Get the standard output stream and go to raw mode.
@@ -43,7 +44,7 @@ fn main(){
             Key::Esc       => if menu == false{menu = true}else{menu = false},
             _              => character = '_',
         }
-        render(menu);
+        render(menu, &colonys);
         // Flush stdout
         stdout.flush().unwrap();
     }
@@ -52,7 +53,7 @@ fn main(){
     write!(stdout, "{}{}", termion::cursor::Show, termion::clear::All).unwrap();
 }
 
-fn init(){
+fn init() -> Vec<Colony> {
     let mut colonies = Vec::new();
     let mut n = 0;
     while n < 4 {
@@ -63,9 +64,10 @@ fn init(){
         colonies.push(colony);
         n += 1;
     };
+    colonies
 }
 
-fn render(display: bool){
+fn render(display: bool, colony: &Vec<Colony>,){
     if display {
         let pop = Menu {
             selected: 1,
@@ -133,7 +135,20 @@ struct Menu {
     selected: u8,
 }
 
+struct KeysPressedLast {
+    right: bool,
+    left: bool,
+    up: bool,
+    down: bool,
+}
+
 struct Colony {
     selected: u8,
     owner: u8,
+}
+
+impl Colony {
+    pub fn change_owner (&mut self) -> &mut u8{
+        &mut self.owner
+    }
 }
