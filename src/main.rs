@@ -8,12 +8,23 @@ use termion::raw::IntoRawMode;
 
 //Main function
 fn main() {
-    let mut character = 'm';
-    let mut ypos = 0;
-    let mut xpos = 0;
     let mut menu: bool = false;
     //Initialize the vector with the standard colonies
     let mut colonys = init();
+    let mut l_keys = KeysPressedLast {
+        right: false,
+        left: false,
+        up: false,
+        down: false,
+        space: false,
+    };
+    let mut p_keys = KeysPressedLast {
+        right: false,
+        left: false,
+        up: false,
+        down: false,
+        space: false,
+    };
     // Get the standard input stream.
     let stdin = stdin();
     // Get the standard output stream and go to raw mode.
@@ -42,14 +53,21 @@ fn main() {
             termion::clear::All
         )
         .unwrap();
+        //Set all present key values to false
+        p_keys.right = false;
+        p_keys.left = false;
+        p_keys.up = false;
+        p_keys.down = false;
+        p_keys.space = false;
         //Check keys
         match c.unwrap() {
             // Exit.
             Key::Char('q') => break,
-            Key::Left => xpos = xpos - 1,
-            Key::Right => xpos = xpos + 1,
-            Key::Up => ypos = ypos + 1,
-            Key::Down => ypos = ypos - 1,
+            Key::Char(' ') => p_keys.space = true,
+            Key::Left => p_keys.left = true,
+            Key::Right => p_keys.right = true,
+            Key::Up => p_keys.up = true,
+            Key::Down => p_keys.down = true,
             Key::Esc => {
                 if menu == false {
                     menu = true
@@ -57,12 +75,17 @@ fn main() {
                     menu = false
                 }
             }
-            _ => character = '_',
+            _ => {}
         }
         //Read the vector containing the colonies
         render(menu, &colonys);
         // Flush stdout
         stdout.flush().unwrap();
+        l_keys.right = p_keys.right;
+        l_keys.left = p_keys.left;
+        l_keys.up = p_keys.up;
+        l_keys.down = p_keys.down;
+        l_keys.space = p_keys.space;
     }
 
     // Show the cursor again before we exit and clear the screen.
@@ -89,7 +112,7 @@ fn render(display: bool, colony: &Vec<Colony>) {
     if display {
         let options = Menu { selected: 1 };
         if options.selected == 1 {
-            println!("\n\r\n\r\n\r    ########\n\r    # Menu #\n\r    ########\n\r    # {red}Quit{reset} #\n\r    # Play #\n\r    # Rules#\n\r    ########",
+            println!("\n\r    ########\n\r    # Menu #\n\r    ########\n\r    # {red}Quit{reset} #\n\r    # Play #\n\r    # Rules#\n\r    ########",
             red   = color::Fg(color::Red),
             reset = color::Fg(color::Reset));
         } else {
@@ -188,11 +211,11 @@ struct Menu {
 }
 
 struct KeysPressedLast {
-    right: bool,
-    left: bool,
-    up: bool,
-    down: bool,
-    space: bool,
+    pub right: bool,
+    pub left: bool,
+    pub up: bool,
+    pub down: bool,
+    pub space: bool,
 }
 
 struct Colony {
